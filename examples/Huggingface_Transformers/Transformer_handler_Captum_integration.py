@@ -13,6 +13,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import torch.nn as nn
 from torch.nn.utils.rnn import pad_sequence
+from typing import Any, Iterable, List, Tuple, Union
 from captum.attr import visualization as viz
 from captum.attr import IntegratedGradients, LayerConductance, LayerIntegratedGradients
 from captum.attr import configure_interpretable_embedding_layer, remove_interpretable_embedding_layer
@@ -35,7 +36,7 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
         self.device = torch.device("cuda:" + str(properties.get("gpu_id")) if torch.cuda.is_available() else "cpu")
         #read configs for the mode, model_name, etc. from setup_config.json
         setup_config_path = os.path.join(model_dir, "setup_config.json")
-        captum_utilss = os.path.join(model_dir, "captum_utilss.py")
+        captum_utils = os.path.join(model_dir, "captum_utils.py")
         if os.path.isfile(setup_config_path):
             with open(setup_config_path) as setup_config_file:
                 self.setup_config = json.load(setup_config_file)
@@ -87,92 +88,80 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
                 logger.warning('Missing the index_to_name.json file.')
 
         self.initialized = True
-    def predict(self,inputs,attention_mask=None):
-        return self.model(inputs, attention_mask=attention_mask, )
 
-    def squad_pos_forward_func(self,inputs, attention_mask=None, position=0):
-        pred = self.predict(inputs,
-                       attention_mask=attention_mask)
-        pred = pred[position]
-        return pred.max(1).values
-
-    # def construct_input_ref_pair(self,question, text, ref_token_id, sep_token_id, cls_token_id):
-    #     question_ids = self.tokenizer.encode(question, add_special_tokens=False)
-    #     text_ids = self.tokenizer.encode(text, add_special_tokens=False)
-    #     # construct input token ids
-    #     input_ids = [cls_token_id] + question_ids + [sep_token_id] + text_ids + [sep_token_id]
-    #     print("question ids",input_ids)
-    #
-    #     # construct reference token ids
-    #     ref_input_ids = [cls_token_id] + [ref_token_id] * len(question_ids) + [sep_token_id] + \
-    #         [ref_token_id] * len(text_ids) + [sep_token_id]
-    #
-    #     return torch.tensor([input_ids], device=self.device), torch.tensor([ref_input_ids], device=self.device), len(question_ids)
-    #
-    # def construct_qa_input_ref_pair(self,question, text, ref_token_id, sep_token_id, cls_token_id):
-    #     question_ids = self.tokenizer.encode(question, add_special_tokens=False)
-    #     text_ids = self.tokenizer.encode(text, add_special_tokens=False)
-    #     # construct reference token ids
-    #     ref_input_ids = [cls_token_id] + [ref_token_id] * len(question_ids) + [sep_token_id] + \
-    #         [ref_token_id] * len(text_ids) + [sep_token_id]
-    #
-    #     return torch.tensor([ref_input_ids], device=self.device)
-    #
-    # def construct_classification_input_ref_pair(self, text, ref_token_id, sep_token_id, cls_token_id):
-    #     text_ids = self.tokenizer.encode(text, add_special_tokens=False)
-    #     input_ids = [cls_token_id] + text_ids + [sep_token_id]
-    #     # construct reference token ids
-    #     ref_input_ids = [cls_token_id] + [ref_token_id] * len(text_ids) + [sep_token_id]
-    #
-    #     return torch.tensor([input_ids], device=self.device), torch.tensor([ref_input_ids], device=self.device)
-    #
-    # def construct_attention_mask(self,input_ids):
-    #     return torch.ones_like(input_ids)
-    #
-    # def summarize_attributions(self,attributions):
-    #     attributions = attributions.sum(dim=-1).squeeze(0)
-    #     attributions = attributions / torch.norm(attributions)
-    #     return attributions
-    #
-    # def pad_sequence(self,unpadded_seq,max_length):
-    #     unpadded_seq_list = unpadded_seq.squeeze(0).tolist()
-    #     max_range = int(max_length) - len(unpadded_seq_list)
-    #     for i in range(max_range):
-    #         unpadded_seq_list.append(0)
-    #     return torch.tensor([unpadded_seq_list])
 
     def preprocess(self, data):
         """ Basic text preprocessing, based on the user's chocie of application mode.
         """
-        from captum_utilss import construct_classification_input_ref_pair,construct_attention_mask,summarize_attributions,squad_pos_forward_func,construct_input_ref_pair
 
         text = data[0].get("data")
         if text is None:
             text = data[0].get("body")
         input_text = text.decode('utf-8')
+        Body = ast.literal_eval(input_text)
         max_length = self.setup_config["max_length"]
+        logger.info("Received text: '%s'", input_text)
+        #preprocessing text for sequence_classification and token_classification.
+        if self.setup_config["mode"]== "sequence_classification" or self.setup_config["mode"]== "token_classification" :
+            query_text = Body["text"]
+            inputs = self.tokenizer.encode_plus(query_text,max_length = int(max_length),pad_to_max_length = True, add_special_tokens = True, return_tensors = 'pt')
+
+        elif self.setup_config["mode"]== "question_answering":
+            #TODO Reading the context from a pickeled file or other fromats that
+            # fits the requirements of the task in hand. If this is done then need to
+            # modify the following preprocessing accordingly.
+
+            # the sample text for question_answering in the current version
+            # should be formated as dictionary with question and text as keys
+            # and related text as values.
+            # we use this format here seperate question and text for encoding.
+            question = Body["question"]
+            context = Body["context"]
+            inputs = self.tokenizer.encode_plus(question, context,max_length = int(max_length),pad_to_max_length = True, add_special_tokens=True, return_tensors="pt")
+        return inputs, Body
+
+    def interpret(self, Body):
+        from captum_utils import construct_classification_input_ref_pair,construct_attention_mask,summarize_attributions,squad_pos_forward_func,construct_input_ref_pair,text_visualization
+
+        interperation = Body["interperation"]
+        # max_length = self.setup_config["max_length"]
         model_embedding_class = self.setup_config["model_embedding_class"]
+        embed = getattr(self.model, model_embedding_class)
+        embedding = embed.embeddings
         if self.captum_target_class:
             target = int(self.captum_target_class)
         else:
             target = None
-        embed = getattr(self.model, model_embedding_class)
-        embedding = embed.embeddings
-        logger.info("Received text: '%s'", input_text)
+        # logger.info("Received text: '%s'", input_text)
         #preprocessing text for sequence_classification and token_classification.
         if self.setup_config["mode"]== "sequence_classification" or self.setup_config["mode"]== "token_classification" :
-            inputs = self.tokenizer.encode_plus(input_text,max_length = int(max_length),pad_to_max_length = True, add_special_tokens = True, return_tensors = 'pt')
-            if self.captum_visualization:
-                input_ids, ref_input_ids = construct_classification_input_ref_pair(self.tokenizer, input_text, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-                attention_mask = construct_attention_mask(input_ids)
-                lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
-                attributions_ig, delta = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
-                                           additional_forward_args=(self.model,attention_mask, 0),
-                                           target=target,
-                                           return_convergence_delta=True)
+            # if self.captum_visualization:
+            query_text = Body["text"]
+            input_ids, ref_input_ids = construct_classification_input_ref_pair(self.tokenizer, query_text, self.ref_token_id, self.sep_token_id, self.cls_token_id)
+            indices = input_ids[0].detach().tolist()
+            all_tokens = self.tokenizer.convert_ids_to_tokens(indices)
+            attention_mask = construct_attention_mask(input_ids)
+            lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
+            attributions_ig, delta = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
+                                       additional_forward_args=(self.model,attention_mask, 0),
+                                       target=target,
+                                       return_convergence_delta=True)
 
-                attributions_sequence_cls_sum = summarize_attributions(attributions_ig)
-                print("***********", attributions_sequence_cls_sum)
+            attributions_sequence_cls_sum = summarize_attributions(attributions_ig)
+            print("***********", attributions_sequence_cls_sum)
+            preds = self.model(input_ids, attention_mask=attention_mask)
+            prediction = torch.argmax(preds[0], dim=2)
+            print("@@@@@@@@@@@@@@@@@@@@@@@@",prediction, preds[0], preds[0].size())
+            # classification_vis = viz.VisualizationDataRecord(
+            #             attributions_ig,
+            #             torch.max(torch.softmax(start_scores[0], dim=0)),
+            #             torch.argmax(start_scores),
+            #             torch.argmax(start_scores),
+            #             str(-1),
+            #             attributions_start_sum.sum(),
+            #             all_tokens,
+            #             delta_start)
+            # text_visualization([start_position_vis])
 
         #preprocessing text for question_answering.
         elif self.setup_config["mode"]== "question_answering":
@@ -185,35 +174,50 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
             # and related text as values.
             # we use this format here seperate question and text for encoding.
 
-            question_context= ast.literal_eval(input_text)
-            question = question_context["question"]
-            context = question_context["context"]
+            question = Body["question"]
+            context = Body["context"]
             all_input =question+context
-            if self.captum_visualization:
-                input_ids, ref_input_ids, sep_id = construct_input_ref_pair(self.tokenizer,question, context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-                # ref_input_new = self.construct_qa_input_ref_pair(question,context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-                # input_ids = inputs['input_ids']
-                # attention_mask = inputs['attention_mask']
-                # ref_ids = self.pad_sequence(ref_input_new,max_length)
-                attention_mask = construct_attention_mask(input_ids)
-                lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
+            # if self.captum_visualization:
+            input_ids, ref_input_ids, sep_id = construct_input_ref_pair(self.tokenizer,question, context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
+            # ref_input_new = self.construct_qa_input_ref_pair(question,context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
+            # input_ids = inputs['input_ids']
+            # attention_mask = inputs['attention_mask']
+            # ref_ids = self.pad_sequence(ref_input_new,max_length)
+            indices = input_ids[0].detach().tolist()
+            all_tokens = self.tokenizer.convert_ids_to_tokens(indices)
+            attention_mask = construct_attention_mask(input_ids)
+            lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
 
-                attributions_start, delta_start = lig.attribute(inputs=input_ids,
-                                                  baselines=ref_input_ids,
-                                                  additional_forward_args=(self.model,attention_mask, 0),
-                                                  return_convergence_delta=True)
-                attributions_end, delta_end = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
-                                                additional_forward_args=(self.model,attention_mask, 1),
-                                                return_convergence_delta=True)
-                attributions_start_sum = summarize_attributions(attributions_start)
-                attributions_end_sum = summarize_attributions(attributions_end)
+            attributions_start, delta_start = lig.attribute(inputs=input_ids,
+                                              baselines=ref_input_ids,
+                                              additional_forward_args=(self.model,attention_mask, 0),
+                                              return_convergence_delta=True)
+            attributions_end, delta_end = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
+                                            additional_forward_args=(self.model,attention_mask, 1),
+                                            return_convergence_delta=True)
+            attributions_start_sum = summarize_attributions(attributions_start)
+            attributions_end_sum = summarize_attributions(attributions_end)
+            print("***********", attributions_start_sum)
 
-            inputs = self.tokenizer.encode_plus(question, context,max_length = int(max_length),pad_to_max_length = True, add_special_tokens=True, return_tensors="pt")
-        return inputs
+            start_scores, end_scores = self.model(input_ids, attention_mask=attention_mask)
+            start_position_vis = viz.VisualizationDataRecord(
+                        attributions_start_sum,
+                        torch.max(torch.softmax(start_scores[0], dim=0)),
+                        torch.argmax(start_scores),
+                        -1,
+                        torch.argmax(start_scores),
+                        attributions_start_sum.sum(),
+                        all_tokens,
+                        delta_start)
+            dom = text_visualization([start_position_vis])
+            print(type(dom), dom)
+        return
 
-    def inference(self, inputs):
+    def inference(self, inputs, Body):
         """ Predict the class (or classes) of the received text using the serialized transformers checkpoint.
         """
+        if Body["interperation"]:
+            self.interpret(Body)
 
 
         input_ids = inputs["input_ids"].to(self.device)
@@ -267,8 +271,8 @@ def handle(data, context):
         if data is None:
             return None
 
-        data = _service.preprocess(data)
-        data = _service.inference(data)
+        data,Body = _service.preprocess(data)
+        data = _service.inference(data, Body)
         data = _service.postprocess(data)
 
         return data
