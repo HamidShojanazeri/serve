@@ -1,8 +1,11 @@
 {
- "model_name":"bert-base-uncased",
- "mode":"sequence_classification",
+ "model_name":"distilbert-base-cased-distilled-squad",
+ "mode":"question_answering",
  "do_lower_case":"True",
- "num_labels":"2",
- "save_mode":"torchscript",
- "max_length":"150"
+ "num_labels":"0",
+ "save_mode":"pretrained",
+ "max_length":"150",
+ "captum_visualization":"True",
+ "captum_target_class":"",
+ "model_embedding_class":"distilbert"
 }
