@@ -61,9 +61,14 @@ def construct_attention_mask(input_ids):
   return torch.ones_like(input_ids)
 
 
+def squad_cls_forward_func(inputs,model=None, attention_mask=None):
+    model = model
+    pred = model(inputs, attention_mask=attention_mask)
+    return pred[0]
+
 def squad_pos_forward_func(inputs,model=None, attention_mask=None, position=0):
     model = model
-    pred = model(inputs, attention_mask=attention_mask, )
+    pred = model(inputs, attention_mask=attention_mask)
     pred = pred[position]
     return pred.max(1).values
 
