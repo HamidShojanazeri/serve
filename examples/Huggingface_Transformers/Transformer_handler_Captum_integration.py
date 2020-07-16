@@ -70,14 +70,11 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
 
         logger.debug('Transformer model from path {0} loaded successfully'.format(model_dir))
         #intilaizing rquired token references for captum
-        self.captum_visualization = self.setup_config["captum_visualization"]
-        self.captum_target_class = self.setup_config["captum_target_class"]
-        if self.captum_visualization:
-            self.ref_token_id = self.tokenizer.pad_token_id # A token used for generating token reference
+        self.ref_token_id = self.tokenizer.pad_token_id # A token used for generating token reference
 
-            self.sep_token_id = self.tokenizer.sep_token_id # A token used as a separator between question and text and it is also added to the end of the text.
+        self.sep_token_id = self.tokenizer.sep_token_id # A token used as a separator between question and text and it is also added to the end of the text.
 
-            self.cls_token_id = self.tokenizer.cls_token_id # A token used for prepending to the concatenated question-text word sequence
+        self.cls_token_id = self.tokenizer.cls_token_id # A token used for prepending to the concatenated question-text word sequence
         # Read the mapping file, index to object name
         mapping_file_path = os.path.join(model_dir, "index_to_name.json")
         # Question answering does not need the index_to_name.json file.
@@ -122,18 +119,12 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
         return inputs, Body
 
     def interpret(self, Body):
-        from captum_utils import construct_classification_input_ref_pair,construct_attention_mask,summarize_attributions,squad_pos_forward_func,construct_input_ref_pair,text_visualization
+        from captum_utils import construct_classification_input_ref_pair,construct_attention_mask,summarize_attributions,squad_pos_forward_func,construct_input_ref_pair,text_visualization, squad_cls_forward_func
 
         interperation = Body["interperation"]
-        # max_length = self.setup_config["max_length"]
-        model_embedding_class = self.setup_config["model_embedding_class"]
+        model_embedding_class = Body["model_embedding_class"]
         embed = getattr(self.model, model_embedding_class)
         embedding = embed.embeddings
-        if self.captum_target_class:
-            target = int(self.captum_target_class)
-        else:
-            target = None
-        # logger.info("Received text: '%s'", input_text)
         #preprocessing text for sequence_classification and token_classification.
         if self.setup_config["mode"]== "sequence_classification" or self.setup_config["mode"]== "token_classification" :
             # if self.captum_visualization:
@@ -141,33 +132,47 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
             input_ids, ref_input_ids = construct_classification_input_ref_pair(self.tokenizer, query_text, self.ref_token_id, self.sep_token_id, self.cls_token_id)
             indices = input_ids[0].detach().tolist()
             all_tokens = self.tokenizer.convert_ids_to_tokens(indices)
-            print("##############",len(all_tokens),input_ids.size())
             attention_mask = construct_attention_mask(input_ids)
-            lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
-            target =(0,1)
+            preds = self.model(input_ids, attention_mask=attention_mask)
+
+            if self.setup_config["mode"]== "sequence_classification":
+
+                target = int(Body["target_class"])
+                pred_probability = torch.max(torch.softmax(preds[0], dim=0))
+                pred_class = self.mapping[str(preds[0].argmax(1).item())]
+                true_class = -1
+                attr_class = self.mapping[str(target)]
+
+            elif self.setup_config["mode"]== "token_classification":
+
+                label_list = self.mapping["label_list"]
+                label_list = label_list.strip('][').split(', ')
+                target =(int(Body["target_token"]),int(Body["target_class"]))
+                pred_probability = torch.max(torch.softmax(preds[0][target[0]][target[1]], dim=0))
+                pred_class = label_list[torch.argmax(preds[0][target[0]][target[1]])]
+                true_class = -1
+                attr_class = label_list[target[1]]
+
+
+            lig = LayerIntegratedGradients(squad_cls_forward_func, embedding)
             attributions_ig, delta = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
                                        additional_forward_args=(self.model,attention_mask),
                                        target=target,
                                        return_convergence_delta=True)
-
             attributions_sequence_cls_sum = summarize_attributions(attributions_ig)
-            print("***********", attributions_sequence_cls_sum)
-            preds = self.model(input_ids, attention_mask=attention_mask)
-            prediction = torch.argmax(preds[0], dim=2)
-            print("@@@@@@@@@@@@@@@@@@@@@@@@",preds[0][0].size(),attributions_ig.size())
-            print("####################### all tokens and attribute scores",len(all_tokens),attributions_ig.size(), input_ids.size())
+            attr_score = attributions_sequence_cls_sum.sum()
             classification_vis = viz.VisualizationDataRecord(
                         attributions_sequence_cls_sum,
-                        torch.max(torch.softmax(preds[0][0][1], dim=0)),
-                        torch.argmax(preds[0][0][1]),
-                        torch.argmax(preds[0][0][1]),
-                        str(-1),
+                        pred_probability,
+                        pred_class,
+                        true_class,
+                        attr_class,
                         attributions_sequence_cls_sum.sum(),
                         all_tokens,
                         delta)
-            dom = text_visualization([classification_vis])
-            print(dom)
 
+            dom = text_visualization([classification_vis])
+            return dom
         #preprocessing text for question_answering.
         elif self.setup_config["mode"]== "question_answering":
             #TODO Reading the context from a pickeled file or other fromats that
@@ -184,16 +189,10 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
             all_input =question+context
             # if self.captum_visualization:
             input_ids, ref_input_ids, sep_id = construct_input_ref_pair(self.tokenizer,question, context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-            # ref_input_new = self.construct_qa_input_ref_pair(question,context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-            # input_ids = inputs['input_ids']
-            # attention_mask = inputs['attention_mask']
-            # ref_ids = self.pad_sequence(ref_input_new,max_length)
             indices = input_ids[0].detach().tolist()
             all_tokens = self.tokenizer.convert_ids_to_tokens(indices)
             attention_mask = construct_attention_mask(input_ids)
             lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
-            print("############## Input IDSSSSSSSS",input_ids)
-            print("############## REFFFFFFF IDSSSSSSSs",ref_input_ids)
 
             attributions_start, delta_start = lig.attribute(inputs=input_ids,
                                               baselines=ref_input_ids,
@@ -204,10 +203,8 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
                                             return_convergence_delta=True)
             attributions_start_sum = summarize_attributions(attributions_start)
             attributions_end_sum = summarize_attributions(attributions_end)
-            print("***********", attributions_start_sum)
 
             start_scores, end_scores = self.model(input_ids, attention_mask=attention_mask)
-            print("@@@@@@@@@@@@@@@@@@@@@@@@",start_scores.size(),end_scores.size(), "torchmax : ",torch.max(torch.softmax(start_scores[0], dim=0)), "Start score[0]", start_scores[0].size())
             start_position_vis = viz.VisualizationDataRecord(
                         attributions_start_sum,
                         torch.max(torch.softmax(start_scores[0], dim=0)),
@@ -229,17 +226,20 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
                         delta_start)
             start_dom = text_visualization([start_position_vis])
             end_dom = text_visualization([end_position_vis])
-            print(type(dom), dom)
             return start_dom, end_dom
-        return
+
 
     def inference(self, inputs, Body):
         """ Predict the class (or classes) of the received text using the serialized transformers checkpoint.
         """
         response = {}
         if Body["interperation"]:
-            start_dom, end_dom = self.interpret(Body)
-            dom = start_dom + end_dom
+            if self.setup_config["mode"]== "question_answering":
+                start_dom, end_dom = self.interpret(Body)
+                dom = start_dom + end_dom
+            elif self.setup_config["mode"]== "sequence_classification" or self.setup_config["mode"]== "token_classification":
+                dom = self.interpret(Body)
+
             tmpdir = tempfile.mkdtemp()
             filename = 'visualization.html'
 
