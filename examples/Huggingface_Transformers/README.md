@@ -52,6 +52,30 @@ torch.jit.save(traced_model,os.path.join(NEW_DIR, "traced_model.pt"))
 
 ```
 
+#### Captum Insight Support
+
+Captum is an open source, extensible library for model interpretability built on PyTorch.
+
+With the increase in model complexity and the resulting lack of transparency, model interpretability methods have become increasingly important. Model understanding is both an active area of research as well as an area of focus for practical applications across industries using machine learning. Captum provides state-of-the-art algorithms, including Integrated Gradients, to provide researchers and developers with an easy way to understand which features are contributing to a model’s output.
+
+In Huggingface transformers handler, we support Captum to interpret models with focus on word importance in a sequence. This helps us to get insight about our developed / fine-tuned model by having each words contirbution in the inference results of a particular label / class.  This has been implemented through the "interpret" function in the handler.
+
+To get started with Captum in Huggingface transformers handler, we need to pass required information along with the data being sent for inferece. A sample of data for inference for each use case (sequence, token classification and question answering) can be found in captum_artifacts folder.
+
+In the data being sent for inference we need to provide following information:
+
+*interperation :* It should be set to True is intended to use Captum, False otherwise.
+
+*output* : It can be set to "html" that in this case will return a visualization through Dom object that can be visualized through browser, or "json" that will word importance be added to the output from the inference.
+
+*target_class:* if we are using captum for sequence classification, we will have the word importance for each selected target class. This would be an number represent the output class of our interest. 
+
+*target_token:* if we are using captum for token classification, we will have the word importance for each selected target class of specific token in the sequence. This would be an number represent a specific token  of our interest.
+
+*model_embedding_class:*  it is being used to sepcify the embedding layer in the select Huggingface transformers, it can be "bert" for any selected BERT models ("model.bert.embeddings"), or "roberta" for RoBERTa models.
+
+The tatger classes and tokens are not required for question answering use case. 
+
 #### Setting the setup_config.json
 
 In the setup_config.json :
