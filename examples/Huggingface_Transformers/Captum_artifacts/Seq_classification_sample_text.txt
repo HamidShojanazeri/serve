@@ -1,0 +1,1 @@
+{"text":"Bloomberg has decided to publish a new report on the global economy, this seems to be a good signal at the end of the day that the world is moving to a brighter side and every other company is trying to increase their stability which is great signal to the whole world economy","interperation":True, "output":"json", "target_class":"1", "model_embedding_class":"bert"}

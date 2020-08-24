@@ -1,0 +1,1 @@
+{"text":"Bloomberg has decided to publish a new report on the global economy.","interperation":True, "output":"json", "target_token":"0", "target_class":"1", "model_embedding_class":"bert"}
