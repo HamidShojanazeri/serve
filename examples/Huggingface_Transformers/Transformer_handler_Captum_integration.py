@@ -120,149 +120,10 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
             inputs = self.tokenizer.encode_plus(question, context,max_length = int(max_length),pad_to_max_length = True, add_special_tokens=True, return_tensors="pt")
         return inputs, Body
 
-    # def interpret(self, Body):
-    #     # from captum_utils import construct_classification_input_ref_pair,construct_attention_mask,summarize_attributions,squad_pos_forward_func,construct_input_ref_pair,text_visualization, squad_cls_forward_func
-    #
-    #     interperation = Body["interperation"]
-    #     model_embedding_class = Body["model_embedding_class"]
-    #     embed = getattr(self.model, model_embedding_class)
-    #     embedding = embed.embeddings
-    #     #preprocessing text for sequence_classification and token_classification.
-    #     if self.setup_config["mode"]== "sequence_classification" or self.setup_config["mode"]== "token_classification" :
-    #         # if self.captum_visualization:
-    #         query_text = Body["text"]
-    #         input_ids, ref_input_ids = construct_classification_input_ref_pair(self.tokenizer, query_text, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-    #         indices = input_ids[0].detach().tolist()
-    #         all_tokens = self.tokenizer.convert_ids_to_tokens(indices)
-    #         attention_mask = construct_attention_mask(input_ids)
-    #         preds = self.model(input_ids,attention_mask)
-    #
-    #         if self.setup_config["mode"]== "sequence_classification":
-    #
-    #             target = int(Body["target_class"])
-    #             pred_probability = torch.max(torch.softmax(preds[0], dim=0))
-    #             pred_class = self.mapping[str(preds[0].argmax(1).item())]
-    #             true_class = -1
-    #             attr_class = self.mapping[str(target)]
-    #             print("#################################",type(pred_probability), type(pred_class))
-    #         elif self.setup_config["mode"]== "token_classification":
-    #
-    #             label_list = self.mapping["label_list"]
-    #             label_list = label_list.strip('][').split(', ')
-    #             target =(int(Body["target_token"]),int(Body["target_class"]))
-    #             pred_probability = torch.max(torch.softmax(preds[0][target[0]][target[1]], dim=0))
-    #             pred_class = label_list[torch.argmax(preds[0][target[0]][target[1]])]
-    #             true_class = -1
-    #             attr_class = label_list[target[1]]
-    #
-    #
-    #         lig = LayerIntegratedGradients(squad_cls_forward_func, embedding)
-    #         attributions_ig, delta = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
-    #                                    additional_forward_args=(self.model,attention_mask),
-    #                                    target=target,
-    #                                    n_steps=20,
-    #                                    return_convergence_delta=True)
-    #         attributions_sequence_cls_sum = summarize_attributions(attributions_ig)
-    #         attr_score = attributions_sequence_cls_sum.sum()
-    #         classification_vis = viz.VisualizationDataRecord(
-    #                     attributions_sequence_cls_sum,
-    #                     pred_probability,
-    #                     pred_class,
-    #                     true_class,
-    #                     attr_class,
-    #                     attributions_sequence_cls_sum.sum(),
-    #                     all_tokens,
-    #                     delta)
-    #         print("**************delta**********",delta)
-    #         dom = text_visualization([classification_vis])
-    #         return dom
-    #     #preprocessing text for question_answering.
-    #     elif self.setup_config["mode"]== "question_answering":
-    #         #TODO Reading the context from a pickeled file or other fromats that
-    #         # fits the requirements of the task in hand. If this is done then need to
-    #         # modify the following preprocessing accordingly.
-    #
-    #         # the sample text for question_answering in the current version
-    #         # should be formated as dictionary with question and text as keys
-    #         # and related text as values.
-    #         # we use this format here seperate question and text for encoding.
-    #
-    #         question = Body["question"]
-    #         context = Body["context"]
-    #         all_input =question+context
-    #         # if self.captum_visualization:
-    #         input_ids, ref_input_ids, sep_id = construct_input_ref_pair(self.tokenizer,question, context, self.ref_token_id, self.sep_token_id, self.cls_token_id)
-    #         indices = input_ids[0].detach().tolist()
-    #         all_tokens = self.tokenizer.convert_ids_to_tokens(indices)
-    #         attention_mask = construct_attention_mask(input_ids)
-    #         lig = LayerIntegratedGradients(squad_pos_forward_func, embedding)
-    #
-    #         attributions_start, delta_start = lig.attribute(inputs=input_ids,
-    #                                           baselines=ref_input_ids,
-    #                                           additional_forward_args=(self.model,attention_mask, 0),
-    #                                           return_convergence_delta=True)
-    #         attributions_end, delta_end = lig.attribute(inputs=input_ids, baselines=ref_input_ids,
-    #                                         additional_forward_args=(self.model,attention_mask, 1),
-    #                                         return_convergence_delta=True)
-    #         attributions_start_sum = summarize_attributions(attributions_start)
-    #         attributions_end_sum = summarize_attributions(attributions_end)
-    #
-    #         start_scores, end_scores = self.model(input_ids,attention_mask)
-    #         start_position_vis = viz.VisualizationDataRecord(
-    #                     attributions_start_sum,
-    #                     torch.max(torch.softmax(start_scores[0], dim=0)),
-    #                     torch.argmax(start_scores),
-    #                     -1,
-    #                     torch.argmax(start_scores),
-    #                     attributions_start_sum.sum(),
-    #                     all_tokens,
-    #                     delta_start)
-    #         dom = text_visualization([start_position_vis])
-    #         end_position_vis = viz.VisualizationDataRecord(
-    #                     attributions_end_sum,
-    #                     torch.max(torch.softmax(end_scores[0], dim=0)),
-    #                     torch.argmax(end_scores),
-    #                     -1,
-    #                     torch.argmax(end_scores),
-    #                     attributions_end_sum.sum(),
-    #                     all_tokens,
-    #                     delta_start)
-    #         start_dom = text_visualization([start_position_vis])
-    #         end_dom = text_visualization([end_position_vis])
-    #         return start_dom, end_dom
-
-
     def inference(self, inputs, Body):
         """ Predict the class (or classes) of the received text using the serialized transformers checkpoint.
         """
         response = {}
-        # if Body["interperation"]:
-        #     if self.setup_config["mode"]== "question_answering":
-        #         start_dom, end_dom = self.interpret(Body)
-        #         dom = start_dom + end_dom
-        #     elif self.setup_config["mode"]== "sequence_classification" or self.setup_config["mode"]== "token_classification":
-        #         tic = time.perf_counter()
-        #         dom = self.interpret(Body)
-        #         toc = time.perf_counter()
-        #         print(f"Running preprocesssssssssssssssssssssssssssss timee {toc - tic:0.4f} seconds")
-        #     tmpdir = tempfile.mkdtemp()
-        #     filename = 'visualization.html'
-        #
-        #     # Ensure the file is read/write by the creator only
-        #     # saved_umask = os.umask(0o77)
-        #     if Body["output"]=="html":
-        #         path = os.path.join(tmpdir,filename)
-        #         print(path)
-        #         try:
-        #             with open(path, "w") as tmp:
-        #                 for line in dom:
-        #                     tmp.write(line)
-        #             response["visuliazation"] = path
-        #         except IOError as e:
-        #             print('IOError')
-        #     elif Body["output"]=="json":
-        #         response["visuliazation"] = dom
-
 
         input_ids = inputs["input_ids"].to(self.device)
         # Handling inference for sequence_classification.
@@ -319,16 +180,10 @@ def handle(data, context):
 
         if "interperation" in Body and Body["interperation"]==True:
             response = {}
-            print("WE are inside the new Insight HAndlerrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-
             insight_handler = Insight(InsightMethod("WordImportance"),_service, Body)
-
             dom = insight_handler.insight()
             tmpdir = tempfile.mkdtemp()
             filename = 'visualization.html'
-
-            # Ensure the file is read/write by the creator only
-            # saved_umask = os.umask(0o77)
             if Body["output"]=="html":
                 path = os.path.join(tmpdir,filename)
                 print(path)
@@ -342,7 +197,6 @@ def handle(data, context):
             elif Body["output"]=="json":
                 response["visuliazation"] = dom
 
-            print("WE Finshedddddddddddddddddddddddd  new Insight HAndlerrrrrrrrrrrr")
             return [response]
         else:
             data = _service.inference(data, Body)
