@@ -21,44 +21,6 @@ from enum import Enum
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoModelForQuestionAnswering,AutoModelForTokenClassification,AutoConfig
 
 from ts.torch_handler.word_importance import WordImportance
-# class captum_insight():
-# setup_config = {
-#  "model_name":"bert-base-uncased",
-#  "mode":"sequence_classification",
-#  "do_lower_case":"True",
-#  "num_labels":"2",
-#  "save_mode":"torchscript",
-#  "max_length":"150"
-# }
-# mapping = {
-#  "0":"Not Accepted",
-#  "1":"Accepted"
-# }
-# mode = setup_config["mode"]
-# pretrained_model_name = setup_config["model_name"]
-# num_labels = int(setup_config["num_labels"])
-# save_mode = setup_config["save_mode"]
-# max_length = setup_config["max_length"]
-# do_lower_case = setup_config["do_lower_case"]
-# if save_mode == "torchscript":
-#     torchscript = True
-# else:
-#     torchscript = False
-#
-# if mode== "sequence_classification":
-#     config = AutoConfig.from_pretrained(pretrained_model_name,num_labels=num_labels,torchscript=torchscript)
-#     model = AutoModelForSequenceClassification.from_pretrained(pretrained_model_name, config=config)
-#     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name,do_lower_case=do_lower_case)
-# elif mode== "question_answering":
-#     config = AutoConfig.from_pretrained(pretrained_model_name,torchscript=torchscript)
-#     model = AutoModelForQuestionAnswering.from_pretrained(pretrained_model_name,config=config)
-#     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name,do_lower_case=do_lower_case)
-# elif mode== "token_classification":
-#     config= AutoConfig.from_pretrained(pretrained_model_name,num_labels=num_labels,torchscript=torchscript)
-#     model = AutoModelForTokenClassification.from_pretrained(pretrained_model_name, config=config)
-#     tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name,do_lower_case=do_lower_case)
-#
-# request = {"text":"Bloomberg has decided to publish a new report on the global economy, this seems to be a good signal at the end of the day that the world is moving to a brighter side and every other company is trying to increase their stability which is great signal to the whole world economy","interperation":"True", "output":"html", "target_class":"1", "model_embedding_class":"bert"}
 
 class InsightMethod(Enum):
     word_importance = "WordImportance"
