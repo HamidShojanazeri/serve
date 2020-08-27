@@ -5,6 +5,8 @@ import os
 import ast
 import torch
 import time
+import pathlib
+import glob
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoModelForQuestionAnswering,AutoModelForTokenClassification,AutoConfig
 from ts.torch_handler.base_handler import BaseHandler
 import sys
@@ -39,12 +41,13 @@ class TransformersSeqClassifierHandler(BaseHandler, ABC):
         self.device = torch.device("cuda:" + str(properties.get("gpu_id")) if torch.cuda.is_available() else "cpu")
         # read configs for the mode, model_name, etc. from setup_config.json
         setup_config_path = os.path.join(model_dir, "setup_config.json")
-        captum_utils = os.path.join(model_dir, "captum_utils.py")
         if os.path.isfile(setup_config_path):
             with open(setup_config_path) as setup_config_file:
                 self.setup_config = json.load(setup_config_file)
         else:
             logger.warning('Missing the setup_config.json file.')
+        captum_handler_name = self.setup_config["captum_handler_name"]+".py"
+        self.captum_handler_path = os.path.join(model_dir, captum_handler_name)
 
         #Loading the model and tokenizer from checkpoint and config files based on the user's choice of mode
         #further setup config can be added.
@@ -212,8 +215,9 @@ def handle(data, context):
                 #     response["text"] = Body["question"] +" "+ Body["context"]
                 # else:
                 #     response["text"] = Body["text"]
-                insight_handler = Insight(InsightMethod("WordImportance"),_service, Body)
-                dom = insight_handler.insight()
+                # insight = Insight(InsightMethod("WordImportance"),_service, Body)
+                insight = Insight(_service)
+                dom = insight.captum_handler.get_insight(_service.model, tokenizer = _service.tokenizer, setup_config = _service.setup_config,request =Body, mapping = _service.mapping)
                 tmpdir = tempfile.mkdtemp()
                 filename = 'visualization.html'
                 if Body["output"]=="html":
