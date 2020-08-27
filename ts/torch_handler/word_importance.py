@@ -23,11 +23,14 @@ from enum import Enum
 
 class WordImportance():
 
-    def __init__(self, model):
+    def __init__(self):
+        self.initialized = False
+
+    def initialize(self, model):
         self.model = model
+        self.initialized = True
 
-
-    def get_insight(self,tokenizer,setup_config,request,mapping):
+    def insight(self,tokenizer,setup_config,request,mapping):
         self.tokenizer = tokenizer
         self.config = setup_config
         self.mapping = mapping
@@ -152,3 +155,14 @@ class WordImportance():
                 return dom
             elif self.request["output"] == "json":
                 return [attributions_start_sum.tolist(), attributions_end_sum.tolist()]
+insight_service = WordImportance()
+
+def get_insight(model,tokenizer,setup_config,request,mapping):
+    try:
+        if not insight_service.initialized:
+            insight_service.initialize(model)
+            print("Ye model is intialized")
+            dom = insight_service.insight(tokenizer,setup_config,request,mapping)
+            return dom 
+    except Exception as e:
+        raise e
