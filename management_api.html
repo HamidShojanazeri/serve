@@ -6,7 +6,8 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Management API &mdash; PyTorch/Serve master documentation</title>
@@ -27,13 +28,17 @@
 
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!-- <link rel="stylesheet" href="_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" type="text/css" />
   <link rel="stylesheet" href="_static/katex-math.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Metrics on TorchServe" href="metrics.html" />
-    <link rel="prev" title="Logging on Torchserve" href="logging.html" /> 
+  <!-- Google Analytics -->
+  
+  <!-- End Google Analytics -->
+  
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -57,6 +62,7 @@
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
 </head>
 
 <div class="container-fluid header-holder tutorials-header" id="header-holder">
@@ -71,21 +77,7 @@
           </li>
 
           <li>
-            <div class="ecosystem-dropdown">
-              <a id="dropdownMenuButton" data-toggle="ecosystem-dropdown">
-                Ecosystem
-              </a>
-              <div class="ecosystem-dropdown-menu">
-                <a class="nav-dropdown-item" href="https://pytorch.org/hub"">
-                  <span class=dropdown-title>Models (Beta)</span>
-                  <p>Discover, publish, and reuse pre-trained models</p>
-                </a>
-                <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
-                  <span class=dropdown-title>Tools & Libraries</span>
-                  <p>Explore the ecosystem of tools and libraries</p>
-                </a>
-              </div>
-            </div>
+            <a href="https://pytorch.org/ecosystem">Ecosystem</a>
           </li>
 
           <li>
@@ -101,39 +93,82 @@
           </li>
 
           <li>
-            <a href="https://pytorch.org/docs/stable/index.html">Docs</a>
+            <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+              <a class="resource-option with-down-orange-arrow">
+                Docs
+              </a>
+              <div class="resources-dropdown-menu">
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+                  <span class="dropdown-title">PyTorch</span>
+                  <p></p>
+                </a>
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/audio/stable/index.html">
+                  <span class="dropdown-title">torchaudio</span>
+                  <p></p>
+                </a>
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/text/stable/index.html">
+                  <span class="dropdown-title">torchtext</span>
+                  <p></p>
+                </a>
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/vision/stable/index.html">
+                  <span class="dropdown-title">torchvision</span>
+                  <p></p>
+                </a>
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/elastic/">
+                  <span class="dropdown-title">TorchElastic</span>
+                  <p></p>
+                </a>
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/serve/">
+                  <span class="dropdown-title">TorchServe</span>
+                  <p></p>
+                </a>
+                <a class="doc-dropdown-option nav-dropdown-item" href="https://pytorch.org/xla">
+                  <span class="dropdown-title">PyTorch on XLA Devices</span>
+                  <p></p>
+                </a>
+            </div>
           </li>
 
           <li>
-            <div class="resources-dropdown">
-              <a id="resourcesDropdownButton" data-toggle="resources-dropdown">
+            <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
+              <a class="resource-option with-down-arrow">
                 Resources
               </a>
               <div class="resources-dropdown-menu">
-                <a class="nav-dropdown-item" href="https://pytorch.org/resources"">
-                  <span class=dropdown-title>Developer Resources</span>
+                <a class="nav-dropdown-item" href="https://pytorch.org/features">
+                  <span class="dropdown-title">About</span>
+                  <p>Learn about PyTorch’s features and capabilities</p>
+                </a>
+                <a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+                  <span class="dropdown-title">Community</span>
+                  <p>Join the PyTorch developer community to contribute, learn, and get your questions answered.</p>
+                </a>
+                <a class="nav-dropdown-item" href="https://pytorch.org/resources">
+                  <span class="dropdown-title">Developer Resources</span>
                   <p>Find resources and get questions answered</p>
                 </a>
-                <a class="nav-dropdown-item" href="https://pytorch.org/features">
-                  <span class=dropdown-title>About</span>
-                  <p>Learn about PyTorch’s features and capabilities</p>
+                <a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+                  <span class="dropdown-title">Forums</span>
+                  <p>A place to discuss PyTorch code, issues, install, research</p>
+                </a>
+                <a class="nav-dropdown-item" href="https://pytorch.org/hub">
+                  <span class="dropdown-title">Models (Beta)</span>
+                  <p>Discover, publish, and reuse pre-trained models</p>
                 </a>
               </div>
             </div>
           </li>
 
           <li>
-            <a href="https://github.com/pytorch/pytorch">Github</a>
+            <a href="https://github.com/pytorch/pytorch">GitHub</a>
           </li>
         </ul>
       </div>
 
       <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
     </div>
-
   </div>
 </div>
-
 
 <body class="pytorch-body">
 
@@ -184,27 +219,20 @@
               
             
             
-              <p class="caption"><span class="caption-text">Core APIs</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="inference_api.html">Inference API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="default_handlers.html">TorchServe default inference handlers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging on Torchserve</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logging.html#pre-requisites">Pre-requisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logging.html#types-of-logs">Types of logs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logging.html#modifying-the-behavior-of-the-logs">Modifying the behavior of the logs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logging.html#enable-asynchronous-logging">Enable asynchronous logging</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Management API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics on TorchServe</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rest_api.html">TorchServe REST API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">Advanced configuration</a></li>
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Management API</a><ul>
+<li><a class="reference internal" href="#register-a-model">Register a model</a></li>
+<li><a class="reference internal" href="#scale-workers">Scale workers</a></li>
+<li><a class="reference internal" href="#describe-model">Describe model</a></li>
+<li><a class="reference internal" href="#unregister-a-model">Unregister a model</a></li>
+<li><a class="reference internal" href="#list-models">List models</a></li>
+<li><a class="reference internal" href="#api-description">API Description</a></li>
+<li><a class="reference internal" href="#set-default-version">Set Default Version</a></li>
 </ul>
-<p class="caption"><span class="caption-text">TorchServe Usage</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="server.html">Running the TorchServe</a></li>
-<li class="toctree-l1"><a class="reference internal" href="batch_inference_with_ts.html">Batch Inference with TorchServe</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_service.html">Custom Service</a></li>
+</li>
 </ul>
-
+</div>
             
           
         </div>
@@ -249,7 +277,7 @@
       <li class="pytorch-breadcrumbs-aside">
         
             
-            <a href="_sources/management_api.rst.txt" rel="nofollow"><img src="_static/images/view-page-source-icon.svg"></a>
+            <a href="_sources/management_api.md.txt" rel="nofollow"><img src="_static/images/view-page-source-icon.svg"></a>
           
         
       </li>
@@ -275,10 +303,10 @@
             <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
               
-  <div class="section" id="management-api">
+  <section id="management-api">
 <h1>Management API<a class="headerlink" href="#management-api" title="Permalink to this headline">¶</a></h1>
-<p>TorchServe provides a set of API allow user to manage models at runtime:</p>
-<ol class="arabic simple">
+<p>TorchServe provides the following APIs that allows you to manage models at runtime:</p>
+<ol class="simple">
 <li><p><a class="reference external" href="#register-a-model">Register a model</a></p></li>
 <li><p><a class="reference external" href="#scale-workers">Increase/decrease number of workers for specific model</a></p></li>
 <li><p><a class="reference external" href="#describe-model">Describe a model’s status</a></p></li>
@@ -286,125 +314,162 @@
 <li><p><a class="reference external" href="#list-models">List registered models</a></p></li>
 <li><p><a class="reference external" href="#set-default-version">Set default version of a model</a></p></li>
 </ol>
-<p>Management API is listening on port 8081 and only accessible from localhost by default. To change the default setting, see <a class="reference external" href="configuration.md">TorchServe Configuration</a>.</p>
-<p>Similar as <a class="reference external" href="inference_api.md">Inference API</a>, Management API also provide a <a class="reference external" href="#api-description">API description</a> to describe management APIs with OpenAPI 3.0 specification.</p>
-<div class="section" id="management-apis">
-<h2>Management APIs<a class="headerlink" href="#management-apis" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Register a model<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The Management API listens on port 8081 and is only accessible from localhost by default. To change the default setting, see <a class="reference internal" href="configuration.html"><span class="doc">TorchServe Configuration</span></a>.</p>
+<p>Similar to the <a class="reference internal" href="inference_api.html"><span class="doc">Inference API</span></a>, the Management API provides a <a class="reference external" href="#api-description">API description</a> to describe management APIs with the OpenAPI 3.0 specification.</p>
+<section id="register-a-model">
+<h2>Register a model<a class="headerlink" href="#register-a-model" title="Permalink to this headline">¶</a></h2>
+<p>This API follows the <a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/main/resources/proto/management.proto">ManagementAPIsService.RegisterModel</a> gRPC API.</p>
 <p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/models</span></code></p>
 <ul class="simple">
-<li><p>url - Model archive download url. Supports the following locations:</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">url</span></code> - Model archive download url. Supports the following locations:</p>
 <ul>
-<li><p>a local model archive (.mar); the file must be directly in model_store folder.</p></li>
+<li><p>a local model archive (.mar); the file must be in the <code class="docutils literal notranslate"><span class="pre">model_store</span></code> folder (and not in a subfolder).</p></li>
 <li><p>a URI using the HTTP(s) protocol. TorchServe can download .mar files from the Internet.</p></li>
 </ul>
 </li>
-<li><p>model_name - the name of the model; this name will be used as {model_name} in other API as path. If this parameter is not present, modelName in MANIFEST.json will be used.</p></li>
-<li><p>handler - the inference handler entry-point. This value will override <code class="docutils literal notranslate"><span class="pre">handler</span></code> in MANIFEST.json if present. <strong>NOTE: Make sure that the given ``handler`` is in the ``PYTHONPATH``. The format of handler is ``module_name:method_name``.</strong></p></li>
-<li><p>runtime - the runtime for the model custom service code. This value will override runtime in MANIFEST.json if present. The default value is <code class="docutils literal notranslate"><span class="pre">PYTHON</span></code>.</p></li>
-<li><p>batch_size - the inference batch size. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
-<li><p>max_batch_delay - the maximum delay for batch aggregation. The default value is 100 milliseconds.</p></li>
-<li><p>initial_workers - the number of initial workers to create. The default value is <code class="docutils literal notranslate"><span class="pre">0</span></code>. TorchServe will not run inference until there is at least one work assigned.</p></li>
-<li><p>synchronous - whether or not the creation of worker is synchronous. The default value is false. TorchServe will create new workers without waiting for acknowledgement that the previous worker is online.</p></li>
-<li><p>response_timeout - If the model’s backend worker doesn’t respond with inference response within this timeout period, the worker will be deemed unresponsive and rebooted. The units is seconds. The default value is 120 seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model_name</span></code> - the name of the model; this name will be used as {model_name} in other APIs as part of the path. If this parameter is not present, <code class="docutils literal notranslate"><span class="pre">modelName</span></code> in MANIFEST.json will be used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">handler</span></code> - the inference handler entry-point. This value will override <code class="docutils literal notranslate"><span class="pre">handler</span></code> in MANIFEST.json if present. <strong>NOTE: Make sure that the given <code class="docutils literal notranslate"><span class="pre">handler</span></code> is in the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>. The format of handler is <code class="docutils literal notranslate"><span class="pre">module_name:method_name</span></code>.</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runtime</span></code> - the runtime for the model custom service code. This value will override runtime in MANIFEST.json if present. The default value is <code class="docutils literal notranslate"><span class="pre">PYTHON</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code> - the inference batch size. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_batch_delay</span></code> - the maximum delay for batch aggregation. The default value is 100 milliseconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_workers</span></code> - the number of initial workers to create. The default value is <code class="docutils literal notranslate"><span class="pre">0</span></code>. TorchServe will not run inference until there is at least one work assigned.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">synchronous</span></code> - whether or not the creation of worker is synchronous. The default value is false. TorchServe will create new workers without waiting for acknowledgement that the previous worker is online.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">response_timeout</span></code> - If the model’s backend worker doesn’t respond with inference response within this timeout period, the worker will be deemed unresponsive and rebooted. The units is seconds. The default value is 120 seconds.</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -X POST <span class="s2">&quot;http://localhost:8081/models?url=https://&lt;s3_path&gt;/squeezenet_v1.1.mar&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -X POST  <span class="s2">&quot;http://localhost:8081/models?url=https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar&quot;</span>
 
 <span class="o">{</span>
-  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Model \&quot;squeezenet_v1.1\&quot; registered&quot;</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Model \&quot;squeezenet_v1.1\&quot; Version: 1.0 registered with 0 initial workers. Use scale workers API to add workers for the model.&quot;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-<p>User may want to create workers while register, creating initial workers may take some time, user can choose between synchronous or synchronous call to make sure initial workers are created properly.</p>
-<p>The asynchronous call will return before trying to create workers with HTTP code 202:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X POST <span class="s2">&quot;http://localhost:8081/models?initial_workers=1&amp;synchronous=false&amp;url=https://&lt;s3_path&gt;/squeezenet_v1.1.mar&quot;</span>
+<p>If you’d like to serve an encrypted model then you need to setup <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html">S3 SSE-KMS</a> with the following environment variables:</p>
+<ul class="simple">
+<li><p>AWS_ACCESS_KEY_ID</p></li>
+<li><p>AWS_SECRET_ACCESS_KEY</p></li>
+<li><p>AWS_DEFAULT_REGION</p></li>
+</ul>
+<p>And set “s3_sse_kms=true” in HTTP request.</p>
+<p>For example: model squeezenet1_1 is <a class="reference external" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html">encrypted on S3 under your own private account</a>. The model http url on S3 is https://torchserve.pytorch.org/sse-test/squeezenet1_1.mar.</p>
+<ul class="simple">
+<li><p>if torchserve will run on EC2 instance (eg. OS: ubuntu)</p></li>
+</ul>
+<ol class="simple">
+<li><p>add an IAM Role (AWSS3ReadOnlyAccess) for the EC2 instance</p></li>
+<li><p>run ts_scripts/get_aws_credential.sh to export AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY</p></li>
+<li><p>export AWS_DEFAULT_REGION=your_s3_bucket_region</p></li>
+<li><p>start torchserve</p></li>
+<li><p>Register encrypted model squeezenet1_1 by setting s3_sse_kms=true in curl command.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -X POST  <span class="s2">&quot;http://localhost:8081/models?url=https://torchserve.pytorch.org/sse-test/squeezenet1_1.mar&amp;s3_sse_kms=true&quot;</span>
+
+<span class="o">{</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Model \&quot;squeezenet_v1.1\&quot; Version: 1.0 registered with 0 initial workers. Use scale workers API to add workers for the model.&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>if torchserve will run on local (eg. OS: macOS)</p></li>
+</ul>
+<ol class="simple">
+<li><p>Find your AWS access key and secret key. You can <a class="reference external" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys_retrieve.html">reset them</a> if you forgot the keys.</p></li>
+<li><p>export AWS_ACCESS_KEY_ID=your_aws_access_key</p></li>
+<li><p>export AWS_SECRET_ACCESS_KEY=your_aws_secret_key</p></li>
+<li><p>export AWS_DEFAULT_REGION=your_s3_bucket_region</p></li>
+<li><p>start torchserve</p></li>
+<li><p>Register encrypted model squeezenet1_1 by setting s3_sse_kms=true in curl command (same as EC2 example step 5).</p></li>
+</ol>
+<p>You might want to create workers during registration. because creating initial workers might take some time,
+you can choose between synchronous or asynchronous call to make sure initial workers are created properly.</p>
+<p>The asynchronous call returns with HTTP code 202 before trying to create workers.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X POST <span class="s2">&quot;http://localhost:8081/models?initial_workers=1&amp;synchronous=false&amp;url=https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar&quot;</span>
 
 &lt; HTTP/1.1 <span class="m">202</span> Accepted
 &lt; content-type: application/json
-&lt; x-request-id: 29cde8a4-898e-48df-afef-f1a827a3cbc2
-&lt; content-length: <span class="m">33</span>
+&lt; x-request-id: 4dc54158-c6de-42aa-b5dd-ebcb5f721043
+&lt; content-length: <span class="m">47</span>
 &lt; connection: keep-alive
-&lt;
+&lt; 
 <span class="o">{</span>
-  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Worker updated&quot;</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Processing worker updates...&quot;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-<p>The synchronous call will return after all workers has be adjusted with HTTP code 200.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X POST <span class="s2">&quot;http://localhost:8081/models?initial_workers=1&amp;synchronous=true&amp;url=https://&lt;s3_path&gt;/squeezenet_v1.1.mar&quot;</span>
+<p>The synchronous call returns with HTTP code 200 after all workers have been adjusted.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X POST <span class="s2">&quot;http://localhost:8081/models?initial_workers=1&amp;synchronous=true&amp;url=https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar&quot;</span>
 
 &lt; HTTP/1.1 <span class="m">200</span> OK
 &lt; content-type: application/json
-&lt; x-request-id: c4b2804e-42b1-4d6f-9e8f-1e8901fc2c6c
-&lt; content-length: <span class="m">32</span>
+&lt; x-request-id: ecd2e502-382f-4c3b-b425-519fbf6d3b85
+&lt; content-length: <span class="m">89</span>
 &lt; connection: keep-alive
-&lt;
+&lt; 
 <span class="o">{</span>
-  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Worker scaled&quot;</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Model \&quot;squeezenet1_1\&quot; Version: 1.0 registered with 1 initial workers&quot;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="scale-workers">
-<h3>Scale workers<a class="headerlink" href="#scale-workers" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="scale-workers">
+<h2>Scale workers<a class="headerlink" href="#scale-workers" title="Permalink to this headline">¶</a></h2>
+<p>This API follows the <a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/main/resources/proto/management.proto">ManagementAPIsService.ScaleWorker</a> gRPC API. It returns the status of a model in the ModelServer.</p>
 <p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/models/{model_name}</span></code></p>
 <ul class="simple">
-<li><p>min_worker - (optional) the minimum number of worker processes. TorchServe will try to maintain this minimum for specified model. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
-<li><p>max_worker - (optional) the maximum number of worker processes. TorchServe will make no more that this number of workers for the specified model. The default is the same as the setting for <code class="docutils literal notranslate"><span class="pre">min_worker</span></code>.</p></li>
-<li><p>number_gpu - (optional) the number of GPU worker processes to create. The default value is <code class="docutils literal notranslate"><span class="pre">0</span></code>. If number_gpu exceeds the number of available GPUs, the rest of workers will run on CPU.</p></li>
-<li><p>synchronous - whether or not the call is synchronous. The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p>timeout - the specified wait time for a worker to complete all pending requests. If exceeded, the work process will be terminated. Use <code class="docutils literal notranslate"><span class="pre">0</span></code> to terminate the backend worker process immediately. Use <code class="docutils literal notranslate"><span class="pre">-1</span></code> to wait infinitely. The default value is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">min_worker</span></code> - (optional) the minimum number of worker processes. TorchServe will try to maintain this minimum for specified model. The default value is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_worker</span></code> - (optional) the maximum number of worker processes. TorchServe will make no more that this number of workers for the specified model. The default is the same as the setting for <code class="docutils literal notranslate"><span class="pre">min_worker</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">synchronous</span></code> - whether or not the call is synchronous. The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code> - the specified wait time for a worker to complete all pending requests. If exceeded, the work process will be terminated. Use <code class="docutils literal notranslate"><span class="pre">0</span></code> to terminate the backend worker process immediately. Use <code class="docutils literal notranslate"><span class="pre">-1</span></code> to wait infinitely. The default value is <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p></li>
 </ul>
 <p>Use the Scale Worker API to dynamically adjust the number of workers for any version of a model to better serve different inference request loads.</p>
-<p>There are two different flavour of this API, synchronous vs asynchronous.</p>
+<p>There are two different flavors of this API, synchronous and asynchronous.</p>
 <p>The asynchronous call will return immediately with HTTP code 202:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X PUT <span class="s2">&quot;http://localhost:8081/models/noop?min_worker=3&quot;</span>
 
 &lt; HTTP/1.1 <span class="m">202</span> Accepted
 &lt; content-type: application/json
-&lt; x-request-id: 74b65aab-dea8-470c-bb7a-5a186c7ddee6
-&lt; content-length: <span class="m">33</span>
+&lt; x-request-id: 42adc58e-6956-4198-ad07-db6c620c4c1e
+&lt; content-length: <span class="m">47</span>
 &lt; connection: keep-alive
-&lt;
+&lt; 
 <span class="o">{</span>
-  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Worker updated&quot;</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Processing worker updates...&quot;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-<p>The synchronous call will return after all workers has be adjusted with HTTP code 200.</p>
+<p>The synchronous call returns with HTTP code 200 after all workers have been adjusted.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X PUT <span class="s2">&quot;http://localhost:8081/models/noop?min_worker=3&amp;synchronous=true&quot;</span>
 
 &lt; HTTP/1.1 <span class="m">200</span> OK
 &lt; content-type: application/json
-&lt; x-request-id: c4b2804e-42b1-4d6f-9e8f-1e8901fc2c6c
-&lt; content-length: <span class="m">32</span>
+&lt; x-request-id: b72b1ea0-81c6-4cce-92c4-530d3cfe5d4a
+&lt; content-length: <span class="m">63</span>
 &lt; connection: keep-alive
-&lt;
+&lt; 
 <span class="o">{</span>
-  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Worker scaled&quot;</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Workers scaled to 3 for model: noop&quot;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
 <p>To scale workers of a specific version of a model use URI : /models/{model_name}/{version}
 <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/models/{model_name}/{version}</span></code></p>
-<p>The following synchronus call will return after all workers for version “2.0” for model “noop” has be adjusted with HTTP code 200.</p>
+<p>The following synchronous call will return after all workers for version “2.0” for model “noop” has be adjusted with HTTP code 200.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X PUT <span class="s2">&quot;http://localhost:8081/models/noop/2.0?min_worker=3&amp;synchronous=true&quot;</span>
 
 &lt; HTTP/1.1 <span class="m">200</span> OK
 &lt; content-type: application/json
-&lt; x-request-id: c4b2804e-42b1-4d6f-9e8f-1e8901fc2c6c
-&lt; content-length: <span class="m">32</span>
+&lt; x-request-id: 3997ccd4-ae44-4570-b249-e361b08d3d47
+&lt; content-length: <span class="m">77</span>
 &lt; connection: keep-alive
-&lt;
+&lt; 
 <span class="o">{</span>
-  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Worker scaled&quot;</span>
+  <span class="s2">&quot;status&quot;</span>: <span class="s2">&quot;Workers scaled to 3 for model: noop, version: 2.0&quot;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="describe-model">
-<h3>Describe model<a class="headerlink" href="#describe-model" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="describe-model">
+<h2>Describe model<a class="headerlink" href="#describe-model" title="Permalink to this headline">¶</a></h2>
+<p>This API follows the <a class="reference external" href="../frontend/server/src/main/resources/proto/management.proto">ManagementAPIsService.DescribeModel</a> gRPC API. It returns the status of a model in the ModelServer.</p>
 <p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/models/{model_name}</span></code></p>
 <p>Use the Describe Model API to get detail runtime status of default version of a model:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl http://localhost:8081/models/noop
@@ -506,9 +571,10 @@
 <span class="o">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id2">
-<h3>Unregister a model<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="unregister-a-model">
+<h2>Unregister a model<a class="headerlink" href="#unregister-a-model" title="Permalink to this headline">¶</a></h2>
+<p>This API follows the <a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/main/resources/proto/management.proto">ManagementAPIsService.UnregisterModel</a> gRPC API. It returns the status of a model in the ModelServer.</p>
 <p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/models/{model_name}/{version}</span></code></p>
 <p>Use the Unregister Model API to free up system resources by unregistering specific version of a model from TorchServe:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -X DELETE http://localhost:8081/models/noop/1.0
@@ -518,13 +584,14 @@
 <span class="o">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="list-models">
-<h3>List models<a class="headerlink" href="#list-models" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="list-models">
+<h2>List models<a class="headerlink" href="#list-models" title="Permalink to this headline">¶</a></h2>
+<p>This API follows the <a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/main/resources/proto/management.proto">ManagementAPIsService.ListModels</a> gRPC API. It returns the status of a model in the ModelServer.</p>
 <p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/models</span></code></p>
 <ul class="simple">
-<li><p>limit - (optional) the maximum number of items to return. It is passed as a query parameter. The default value is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
-<li><p>next_page_token - (optional) queries for next page. It is passed as a query parameter. This value is return by a previous API call.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">limit</span></code> - (optional) the maximum number of items to return. It is passed as a query parameter. The default value is <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">next_page_token</span></code> - (optional) queries for next page. It is passed as a query parameter. This value is return by a previous API call.</p></li>
 </ul>
 <p>Use the Models API to query default versions of current registered models:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl <span class="s2">&quot;http://localhost:8081/models&quot;</span>
@@ -548,10 +615,9 @@
 <span class="o">}</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="id3">
-<h2>API Description<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="api-description">
+<h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">OPTIONS</span> <span class="pre">/</span></code></p>
 <p>To view a full list of inference and management APIs, you can use following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># To view all inference APIs:</span>
@@ -564,40 +630,27 @@ curl -X OPTIONS http://localhost:8081
 <p>The out is OpenAPI 3.0.1 json format. You use it to generate client code, see <a class="reference external" href="https://swagger.io/swagger-codegen/">swagger codegen</a> for detail.</p>
 <p>Example outputs of the Inference and Management APIs:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="../frontend/server/src/test/resources/inference_open_api.json">Inference API description output</a></p></li>
-<li><p><a class="reference external" href="../frontend/server/src/test/resources/management_open_api.json">Management API description output</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/test/resources/inference_open_api.json">Inference API description output</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/test/resources/management_open_api.json">Management API description output</a></p></li>
 </ul>
-</div>
-<div class="section" id="set-default-version">
+</section>
+<section id="set-default-version">
 <h2>Set Default Version<a class="headerlink" href="#set-default-version" title="Permalink to this headline">¶</a></h2>
+<p>This API follows the <a class="reference external" href="https://github.com/pytorch/serve/blob/master/frontend/server/src/main/resources/proto/management.proto">ManagementAPIsService.SetDefault</a> gRPC API. It returns the status of a model in the ModelServer.</p>
 <p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/models/{model_name}/{version}/set-default</span></code></p>
 <p>To set any registered version of a model as default version use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -v -X PUT http://localhost:8081/models/noop/2.0/set-default
 </pre></div>
 </div>
 <p>The out is OpenAPI 3.0.1 json format. You use it to generate client code, see <a class="reference external" href="https://swagger.io/swagger-codegen/">swagger codegen</a> for detail.</p>
-<p>Example outputs of the Inference and Management APIs:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="../frontend/server/src/test/resources/inference_open_api.json">Inference API description output</a></p></li>
-<li><p><a class="reference external" href="../frontend/server/src/test/resources/management_open_api.json">Management API description output</a></p></li>
-</ul>
-</div>
-</div>
+</section>
+</section>
 
 
              </article>
              
             </div>
             <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="metrics.html" class="btn btn-neutral float-right" title="Metrics on TorchServe" accesskey="n" rel="next">Next <img src="_static/images/chevron-right-orange.svg" class="next-page"></a>
-      
-      
-        <a href="logging.html" class="btn btn-neutral" title="Logging on Torchserve" accesskey="p" rel="prev"><img src="_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
-      
-    </div>
   
 
   
@@ -628,15 +681,12 @@ curl -X OPTIONS http://localhost:8081
             <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
               <ul>
 <li><a class="reference internal" href="#">Management API</a><ul>
-<li><a class="reference internal" href="#management-apis">Management APIs</a><ul>
-<li><a class="reference internal" href="#id1">Register a model</a></li>
+<li><a class="reference internal" href="#register-a-model">Register a model</a></li>
 <li><a class="reference internal" href="#scale-workers">Scale workers</a></li>
 <li><a class="reference internal" href="#describe-model">Describe model</a></li>
-<li><a class="reference internal" href="#id2">Unregister a model</a></li>
+<li><a class="reference internal" href="#unregister-a-model">Unregister a model</a></li>
 <li><a class="reference internal" href="#list-models">List models</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id3">API Description</a></li>
+<li><a class="reference internal" href="#api-description">API Description</a></li>
 <li><a class="reference internal" href="#set-default-version">Set Default Version</a></li>
 </ul>
 </li>
@@ -655,19 +705,20 @@ curl -X OPTIONS http://localhost:8081
 
      
        <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-         <script type="text/javascript" src="_static/jquery.js"></script>
-         <script type="text/javascript" src="_static/underscore.js"></script>
-         <script type="text/javascript" src="_static/doctools.js"></script>
-         <script type="text/javascript" src="_static/language_data.js"></script>
-         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
-         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
-         <script type="text/javascript" src="_static/katex_autorenderer.js"></script>
+         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+         <script src="_static/jquery.js"></script>
+         <script src="_static/underscore.js"></script>
+         <script src="_static/doctools.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+         <script src="_static/katex_autorenderer.js"></script>
      
 
   
 
   <script type="text/javascript" src="_static/js/vendor/popper.min.js"></script>
   <script type="text/javascript" src="_static/js/vendor/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
   <script type="text/javascript" src="_static/js/theme.js"></script>
 
   <script type="text/javascript">
@@ -806,10 +857,6 @@ curl -X OPTIONS http://localhost:8081
           </li>
 
           <li>
-            <a href="https://pytorch.org/features">Features</a>
-          </li>
-
-          <li>
             <a href="https://pytorch.org/ecosystem">Ecosystem</a>
           </li>
 
@@ -829,13 +876,65 @@ curl -X OPTIONS http://localhost:8081
             <a href="https://pytorch.org/tutorials">Tutorials</a>
           </li>
 
-          <li>
-            <a href="https://pytorch.org/docs/stable/index.html">Docs</a>
+          <li class="resources-mobile-menu-title">
+            Docs
           </li>
 
-          <li>
-            <a href="https://pytorch.org/resources">Resources</a>
+          <ul class="resources-mobile-menu-items">
+            <li>
+              <a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/audio/stable/index.html">torchaudio</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/text/stable/index.html">torchtext</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/vision/stable/index.html">torchvision</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/elastic/">TorchElastic</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/serve/">TorchServe</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/xla">PyTorch on XLA Devices</a>
+            </li>
+          </ul>
+
+          <li class="resources-mobile-menu-title">
+            Resources
           </li>
+
+          <ul class="resources-mobile-menu-items">
+            <li>
+              <a href="https://pytorch.org/resources">Developer Resources</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/features">About</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/hub">Models (Beta)</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/#community-module">Community</a>
+            </li>
+
+            <li>
+              <a href="https://discuss.pytorch.org/">Forums</a>
+            </li>
+          </ul>
 
           <li>
             <a href="https://github.com/pytorch/pytorch">Github</a>
@@ -858,6 +957,7 @@ curl -X OPTIONS http://localhost:8081
       scrollToAnchor.bind();
       highlightNavigation.bind();
       mainMenuDropdown.bind();
+      filterTags.bind();
 
       // Add class to links that have code blocks, since we cannot create links in code blocks
       $("article.pytorch-article a span.pre").each(function(e) {
